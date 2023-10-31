@@ -5,7 +5,7 @@ import Image from "./Image";
 
 const ImageList = ({ images, onDelete, onFeature }) => {
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-5 gap-4">
       {images.map((image) => (
         <Image
           key={image.id}

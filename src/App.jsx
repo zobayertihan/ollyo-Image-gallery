@@ -6,7 +6,9 @@ import "./App.css";
 function App() {
   return (
     <div className="max-w-full mx-auto">
-      <h1>Ollyo Image Gallery</h1>
+      <h1 className="font-bold text-blue-600 text-2xl mb-5">
+        Ollyo Image Gallery
+      </h1>
       <Gallery />
     </div>
   );

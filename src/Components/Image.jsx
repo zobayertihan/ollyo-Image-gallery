@@ -4,7 +4,12 @@ import React from "react";
 
 const Image = ({ id, src, isFeatured, onDelete, onFeature }) => {
   return (
-    <div className="image mb-4 p-4 border rounded">
+    // <div className="image mb-4 p-4 border rounded">
+    <div
+      className={`image ${
+        isFeatured ? "featured" : ""
+      } mb-4 p-4 border rounded ${isFeatured ? "row-span-2 col-span-2" : ""}`}
+    >
       <img className="w-full h-auto" src={src} alt={`Image ${id}`} />
       <div className="image-actions mt-2 flex justify-between">
         <button
