@@ -16,6 +16,8 @@ const Image = ({ id, src, isFeatured, onImageSelect, isSelected }) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      <img src={src} alt={`Image ${id}`} className="w-full h-auto" />
+      <div className="overlay"></div>
       {hovered || isSelected ? (
         <div className="absolute top-2 left-2">
           <input
@@ -26,10 +28,6 @@ const Image = ({ id, src, isFeatured, onImageSelect, isSelected }) => {
           />
         </div>
       ) : null}
-      <div>
-        <img src={src} alt={`Image ${id}`} className="w-full h-auto" />
-        <div className="overlay"></div>
-      </div>
     </div>
   );
 };
