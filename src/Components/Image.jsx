@@ -1,32 +1,39 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React from "react";
+import React, { useState } from "react";
 
-const Image = ({ id, src, isFeatured, onDelete, onFeature }) => {
+const Image = ({
+  id,
+  src,
+  isFeatured,
+  onDelete,
+  onFeature,
+  onImageSelect,
+  isSelected,
+}) => {
+  const [hovered, setHovered] = useState(false);
+  const handleCheckboxChange = () => {
+    onImageSelect(id);
+  };
   return (
-    // <div className="image mb-4 p-4 border rounded">
     <div
-      className={`image ${
-        isFeatured ? "featured" : ""
-      } mb-4 p-4 border rounded ${isFeatured ? "row-span-2 col-span-2" : ""}`}
+      className={`relative image border rounded cursor-pointer ${
+        isFeatured ? "row-span-2 col-span-2" : ""
+      } ${hovered ? "hover:shadow-lg z-10" : ""}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
-      <img className="w-full h-auto" src={src} alt={`Image ${id}`} />
-      <div className="image-actions mt-2 flex justify-between">
-        <button
-          onClick={() => onDelete(id)}
-          className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
-        >
-          Delete
-        </button>
-        <button
-          onClick={() => onFeature(id)}
-          className={`px-2 py-1 rounded ${
-            isFeatured ? "bg-green-500 text-white" : "bg-gray-300 text-gray-700"
-          } hover:bg-green-700`}
-        >
-          {isFeatured ? "Featured" : "Set as Featured"}
-        </button>
-      </div>
+      {hovered || isSelected ? (
+        <div className="absolute top-2 left-2">
+          <input
+            type="checkbox"
+            className="form-checkbox text-blue-500 cursor-pointer"
+            onChange={handleCheckboxChange}
+            checked={isSelected}
+          />
+        </div>
+      ) : null}
+      <img src={src} alt={`Image ${id}`} className="w-full h-auto z-0" />
     </div>
   );
 };

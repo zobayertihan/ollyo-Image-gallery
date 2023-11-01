@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "./Image";
 
-const ImageList = ({ images, onDelete, onFeature }) => {
+const ImageList = ({ images, onImageSelect, selectedImages }) => {
   return (
     <div className="grid grid-cols-5 gap-4">
       {images.map((image) => (
@@ -12,8 +12,8 @@ const ImageList = ({ images, onDelete, onFeature }) => {
           id={image.id}
           src={image.src}
           isFeatured={image.isFeatured}
-          onDelete={onDelete}
-          onFeature={onFeature}
+          onImageSelect={onImageSelect}
+          isSelected={selectedImages.includes(image.id)}
         />
       ))}
     </div>

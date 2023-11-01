@@ -5,63 +5,71 @@ import imagesData from "../images.json";
 
 const Gallery = () => {
   const [images, setImages] = useState(imagesData);
+  const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleDelete = (id) => {
-    let updatedImages = [...images];
-    const index = updatedImages.findIndex((image) => image.id === id);
-    if (index !== -1) {
-      const isFeatured = updatedImages[index].isFeatured;
-      updatedImages.splice(index, 1);
+  const handleImageSelect = (id) => {
+    const isSelected = selectedImages.includes(id);
+    if (isSelected) {
+      const updatedSelection = selectedImages.filter(
+        (selectedId) => selectedId !== id
+      );
+      setSelectedImages(updatedSelection);
+    } else {
+      setSelectedImages([...selectedImages, id]);
+    }
+  };
 
-      // Automatically set the next image as featured if the first image is deleted
-      if (isFeatured && updatedImages.length > 0 && index === 0) {
-        updatedImages[0].isFeatured = true;
+  const handleBatchDelete = () => {
+    // Create a copy of the images array
+    const updatedImages = [...images];
+
+    // Get the IDs of selected images
+    const selectedImageIds = selectedImages.slice();
+
+    // Iterate over the selectedImageIds and remove corresponding images
+    selectedImageIds.forEach((id) => {
+      const index = updatedImages.findIndex((image) => image.id === id);
+      if (index !== -1) {
+        updatedImages.splice(index, 1);
       }
-      // Automatically set the first image as featured if the last image is deleted and it was featured
-      else if (
-        isFeatured &&
-        updatedImages.length > 0 &&
-        index === updatedImages.length
-      ) {
-        updatedImages[0].isFeatured = true;
-      }
+    });
 
+    // Clear the selectedImages array after deletion
+    setSelectedImages([]);
+
+    // Update the state with the updated images array
+    setImages(updatedImages);
+
+    // Check if there are remaining images and set the first image as featured
+    if (updatedImages.length > 0) {
+      updatedImages[0].isFeatured = true;
       setImages(updatedImages);
     }
   };
 
-  const handleReorder = (startIndex, endIndex) => {
-    const reorderedImages = Array.from(images);
-    const [reorderedImage] = reorderedImages.splice(startIndex, 1);
-    reorderedImages.splice(endIndex, 0, reorderedImage);
-    setImages(reorderedImages);
-  };
-
-  const handleFeature = (id) => {
-    const updatedImages = images.map((image) => {
-      return {
-        ...image,
-        isFeatured: image.id === id,
-      };
-    });
-
-    // Move the featured image to the first position in the array
-    const index = updatedImages.findIndex((image) => image.id === id);
-    if (index !== -1) {
-      const [featuredImage] = updatedImages.splice(index, 1);
-      updatedImages.unshift(featuredImage);
-    }
-
-    setImages(updatedImages);
-  };
-
   return (
     <div className="">
+      <div className="flex justify-between mb-5">
+        <div className="text-lg font-bold">
+          {selectedImages.length > 0
+            ? `Selected Items: ${selectedImages.length}`
+            : "Gallery"}
+        </div>
+        <div className="">
+          {selectedImages.length > 0 && (
+            <button
+              onClick={handleBatchDelete}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Delete
+            </button>
+          )}
+        </div>
+      </div>
       <ImageList
         images={images}
-        onDelete={handleDelete}
-        onReorder={handleReorder}
-        onFeature={handleFeature}
+        onImageSelect={handleImageSelect}
+        selectedImages={selectedImages}
       />
     </div>
   );
