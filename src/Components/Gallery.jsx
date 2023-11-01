@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import ImageList from "./ImageList";
 import imagesData from "../images.json";
+import { DragDropContext } from "react-beautiful-dnd";
 
 const Gallery = () => {
   const [images, setImages] = useState(imagesData);
@@ -20,57 +21,83 @@ const Gallery = () => {
   };
 
   const handleBatchDelete = () => {
-    // Create a copy of the images array
     const updatedImages = [...images];
-
-    // Get the IDs of selected images
     const selectedImageIds = selectedImages.slice();
-
-    // Iterate over the selectedImageIds and remove corresponding images
     selectedImageIds.forEach((id) => {
       const index = updatedImages.findIndex((image) => image.id === id);
       if (index !== -1) {
         updatedImages.splice(index, 1);
       }
     });
-
-    // Clear the selectedImages array after deletion
     setSelectedImages([]);
-
-    // Update the state with the updated images array
     setImages(updatedImages);
-
-    // Check if there are remaining images and set the first image as featured
     if (updatedImages.length > 0) {
       updatedImages[0].isFeatured = true;
-      setImages(updatedImages);
     }
+    setImages(updatedImages);
+  };
+
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
+    }
+    // const reorderedImages = Array.from(images);
+    // const [movedImage] = reorderedImages.splice(result.source.index, 1);
+    // reorderedImages.splice(result.destination.index, 0, movedImage);
+    // setImages(reorderedImages);
+    const reorderedImages = [...images];
+    const [movedImage] = reorderedImages.splice(result.source.index, 1);
+    reorderedImages.splice(result.destination.index, 0, movedImage);
+    setImages(reorderedImages);
+    // Handle reordering of selected images if needed
+    const updatedSelectedImages = [...selectedImages];
+    updatedSelectedImages.splice(result.source.index, 1);
+    updatedSelectedImages.splice(result.destination.index, 0, movedImage.id);
+    setSelectedImages(updatedSelectedImages);
+  };
+
+  const onDragStart = (initial) => {
+    console.log("Drag started:", initial);
+  };
+
+  const onDragUpdate = (update) => {
+    console.log("Drag update:", update);
   };
 
   return (
-    <div className="">
-      <div className="flex justify-between mb-5">
-        <div className="text-lg font-bold">
-          {selectedImages.length > 0
-            ? `Selected Items: ${selectedImages.length}`
-            : "Gallery"}
-        </div>
-        <div className="">
-          {selectedImages.length > 0 && (
-            <button
-              onClick={handleBatchDelete}
-              className="bg-red-500 text-white px-4 py-2 rounded"
-            >
-              Delete
-            </button>
-          )}
+    <div className="border p-5 shadow-md">
+      <div className=" bg-white p-5">
+        <div className="flex justify-between w-full">
+          <div className="text-lg font-bold">
+            {selectedImages.length > 0
+              ? `Selected Items: ${selectedImages.length}`
+              : "Gallery"}
+          </div>
+          <div className="">
+            {selectedImages.length > 0 && (
+              <button
+                onClick={handleBatchDelete}
+                className="bg-red-500 text-white px-4 py-2 rounded"
+              >
+                Delete
+              </button>
+            )}
+          </div>
         </div>
       </div>
-      <ImageList
-        images={images}
-        onImageSelect={handleImageSelect}
-        selectedImages={selectedImages}
-      />
+      {/* <DragDropContext
+        onDragEnd={onDragEnd}
+        onDragStart={onDragStart}
+        onDragUpdate={onDragUpdate}
+      > */}
+      <div className="mt-20">
+        <ImageList
+          images={images}
+          onImageSelect={handleImageSelect}
+          selectedImages={selectedImages}
+        />
+      </div>
+      {/* </DragDropContext> */}
     </div>
   );
 };

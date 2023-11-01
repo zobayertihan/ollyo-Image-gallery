@@ -1,0 +1,21 @@
+/* Image.css */
+.image {
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.image .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Change the color and opacity here */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image:hover .overlay {
+  opacity: 1;
+}

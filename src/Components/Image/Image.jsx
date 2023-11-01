@@ -1,16 +1,9 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
+import "./Image.css";
 
-const Image = ({
-  id,
-  src,
-  isFeatured,
-  onDelete,
-  onFeature,
-  onImageSelect,
-  isSelected,
-}) => {
+const Image = ({ id, src, isFeatured, onImageSelect, isSelected }) => {
   const [hovered, setHovered] = useState(false);
   const handleCheckboxChange = () => {
     onImageSelect(id);
@@ -19,7 +12,7 @@ const Image = ({
     <div
       className={`relative image border rounded cursor-pointer ${
         isFeatured ? "row-span-2 col-span-2" : ""
-      } ${hovered ? "hover:shadow-lg z-10" : ""}`}
+      } ${hovered ? "hover:shadow-lg" : ""}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -33,7 +26,10 @@ const Image = ({
           />
         </div>
       ) : null}
-      <img src={src} alt={`Image ${id}`} className="w-full h-auto z-0" />
+      <div>
+        <img src={src} alt={`Image ${id}`} className="w-full h-auto" />
+        <div className="overlay"></div>
+      </div>
     </div>
   );
 };
