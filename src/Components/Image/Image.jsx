@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import "./Image.css";
 
-const Image = ({ id, src, isFeatured, onImageSelect, isSelected }) => {
+const Image = ({ id, src, onImageSelect, isSelected }) => {
   const [hovered, setHovered] = useState(false);
   const handleCheckboxChange = () => {
     onImageSelect(id);
@@ -11,8 +11,8 @@ const Image = ({ id, src, isFeatured, onImageSelect, isSelected }) => {
   return (
     <div
       className={`relative image border rounded cursor-pointer ${
-        isFeatured ? "row-span-2 col-span-2" : ""
-      } ${hovered ? "hover:shadow-lg" : ""}`}
+        hovered ? "hover:shadow-lg" : ""
+      }`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

@@ -41,28 +41,13 @@ const Gallery = () => {
     if (!result.destination) {
       return;
     }
-    // const reorderedImages = Array.from(images);
-    // const [movedImage] = reorderedImages.splice(result.source.index, 1);
-    // reorderedImages.splice(result.destination.index, 0, movedImage);
-    // setImages(reorderedImages);
     const reorderedImages = [...images];
     const [movedImage] = reorderedImages.splice(result.source.index, 1);
     reorderedImages.splice(result.destination.index, 0, movedImage);
     setImages(reorderedImages);
-    // Handle reordering of selected images if needed
-    const updatedSelectedImages = [...selectedImages];
-    updatedSelectedImages.splice(result.source.index, 1);
-    updatedSelectedImages.splice(result.destination.index, 0, movedImage.id);
-    setSelectedImages(updatedSelectedImages);
   };
 
-  const onDragStart = (initial) => {
-    console.log("Drag started:", initial);
-  };
-
-  const onDragUpdate = (update) => {
-    console.log("Drag update:", update);
-  };
+  console.log(images);
 
   return (
     <div className="border p-5 shadow-md">
@@ -85,19 +70,13 @@ const Gallery = () => {
           </div>
         </div>
       </div>
-      {/* <DragDropContext
-        onDragEnd={onDragEnd}
-        onDragStart={onDragStart}
-        onDragUpdate={onDragUpdate}
-      > */}
-      <div className="mt-20">
+      <DragDropContext onDragEnd={onDragEnd}>
         <ImageList
           images={images}
           onImageSelect={handleImageSelect}
           selectedImages={selectedImages}
         />
-      </div>
-      {/* </DragDropContext> */}
+      </DragDropContext>
     </div>
   );
 };
