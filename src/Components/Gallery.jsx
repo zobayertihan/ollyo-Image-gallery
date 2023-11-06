@@ -1,9 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import imagesData from "../images.json";
-import { DragDropContext } from "react-beautiful-dnd";
-import { GridContextProvider, swap } from "react-grid-dnd";
+import { DndContext } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
 import ImageList from "./ImageList/ImageList";
+import imagesData from "../images.json";
 
 const Gallery = () => {
   const [images, setImages] = useState(imagesData);
@@ -20,6 +24,8 @@ const Gallery = () => {
       setSelectedImages([...selectedImages, id]);
     }
   };
+
+  console.log(selectedImages);
 
   const handleBatchDelete = () => {
     const updatedImages = [...images];
@@ -38,66 +44,17 @@ const Gallery = () => {
     setImages(updatedImages);
   };
 
-  // const onDragEnd = (result) => {
-  //   if (!result.destination) {
-  //     return;
-  //   }
-  //   const reorderedImages = [...images];
-  //   const [movedImage] = reorderedImages.splice(result.source.index, 1);
-  //   reorderedImages.splice(result.destination.index, 0, movedImage);
-  //   setImages(reorderedImages);
-  // };
-
-  // const onDragEnd = (result) => {
-  //   if (!result.destination) {
-  //     return;
-  //   }
-
-  //   const reorderedImages = [...images];
-  //   const [movedImage] = reorderedImages.splice(result.source.index, 1);
-
-  //   // Ensure the first image stays at index 0
-  //   if (result.destination.index === 0) {
-  //     reorderedImages.unshift(movedImage);
-  //   } else {
-  //     reorderedImages.splice(result.destination.index, 0, movedImage);
-  //   }
-
-  //   setImages(reorderedImages);
-  // };
-
-  // const onDragEnd = (result) => {
-  //   if (!result.destination) {
-  //     return;
-  //   }
-
-  //   const reorderedImages = Array.from(images);
-  //   const [movedImage] = reorderedImages.splice(result.source.index, 1);
-  //   reorderedImages.splice(result.destination.index, 0, movedImage);
-
-  //   setImages(
-  //     reorderedImages.map((image, index) => ({
-  //       ...image,
-  //       order: index,
-  //     }))
-  //   );
-  // };
-
-  const onDragEnd = (result) => {
-    if (!result.destination) {
+  const onDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over) {
       return;
     }
 
-    const reorderedImages = Array.from(images);
-    const [movedImage] = reorderedImages.splice(result.source.index, 1);
-    reorderedImages.splice(result.destination.index, 0, movedImage);
+    const oldIndex = images.findIndex((image) => image.id === active.id);
+    const newIndex = images.findIndex((image) => image.id === over.id);
 
-    setImages(
-      reorderedImages.map((image, index) => ({
-        ...image,
-        order: index,
-      }))
-    );
+    const reorderedImages = arrayMove(images, oldIndex, newIndex);
+    setImages(reorderedImages);
   };
 
   return (
@@ -126,20 +83,15 @@ const Gallery = () => {
         </div>
       </div>
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        {/* <GridContextProvider
-        onChange={(sourceId, sourceIndex, targetIndex) => {
-          const nextState = swap(images, sourceIndex, targetIndex);
-          setImages(nextState);
-        }}
-      > */}
-        <ImageList
-          images={images}
-          onImageSelect={handleImageSelect}
-          selectedImages={selectedImages}
-        />
-      </DragDropContext>
-      {/* </GridContextProvider> */}
+      <DndContext onDragEnd={onDragEnd}>
+        <SortableContext items={images} strategy={rectSortingStrategy}>
+          <ImageList
+            images={images}
+            onImageSelect={handleImageSelect}
+            selectedImages={selectedImages}
+          />
+        </SortableContext>
+      </DndContext>
     </div>
   );
 };

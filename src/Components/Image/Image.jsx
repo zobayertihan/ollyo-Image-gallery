@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import "./Image.css";
 
@@ -7,6 +7,7 @@ const Image = ({ id, src, onImageSelect, isSelected }) => {
   const [hovered, setHovered] = useState(false);
   const handleCheckboxChange = () => {
     onImageSelect(id);
+    console.log(id);
   };
   return (
     <div
@@ -23,7 +24,9 @@ const Image = ({ id, src, onImageSelect, isSelected }) => {
           <input
             type="checkbox"
             className="form-checkbox text-blue-500 cursor-pointer"
-            onChange={handleCheckboxChange}
+            onChange={() => {
+              console.log("clicked");
+            }}
             checked={isSelected}
           />
         </div>
