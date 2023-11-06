@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import ImageList from "./ImageList";
 import imagesData from "../images.json";
 import { DragDropContext } from "react-beautiful-dnd";
+import { GridContextProvider, swap } from "react-grid-dnd";
+import ImageList from "./ImageList/ImageList";
 
 const Gallery = () => {
   const [images, setImages] = useState(imagesData);
@@ -37,21 +38,71 @@ const Gallery = () => {
     setImages(updatedImages);
   };
 
+  // const onDragEnd = (result) => {
+  //   if (!result.destination) {
+  //     return;
+  //   }
+  //   const reorderedImages = [...images];
+  //   const [movedImage] = reorderedImages.splice(result.source.index, 1);
+  //   reorderedImages.splice(result.destination.index, 0, movedImage);
+  //   setImages(reorderedImages);
+  // };
+
+  // const onDragEnd = (result) => {
+  //   if (!result.destination) {
+  //     return;
+  //   }
+
+  //   const reorderedImages = [...images];
+  //   const [movedImage] = reorderedImages.splice(result.source.index, 1);
+
+  //   // Ensure the first image stays at index 0
+  //   if (result.destination.index === 0) {
+  //     reorderedImages.unshift(movedImage);
+  //   } else {
+  //     reorderedImages.splice(result.destination.index, 0, movedImage);
+  //   }
+
+  //   setImages(reorderedImages);
+  // };
+
+  // const onDragEnd = (result) => {
+  //   if (!result.destination) {
+  //     return;
+  //   }
+
+  //   const reorderedImages = Array.from(images);
+  //   const [movedImage] = reorderedImages.splice(result.source.index, 1);
+  //   reorderedImages.splice(result.destination.index, 0, movedImage);
+
+  //   setImages(
+  //     reorderedImages.map((image, index) => ({
+  //       ...image,
+  //       order: index,
+  //     }))
+  //   );
+  // };
+
   const onDragEnd = (result) => {
     if (!result.destination) {
       return;
     }
-    const reorderedImages = [...images];
+
+    const reorderedImages = Array.from(images);
     const [movedImage] = reorderedImages.splice(result.source.index, 1);
     reorderedImages.splice(result.destination.index, 0, movedImage);
-    setImages(reorderedImages);
-  };
 
-  console.log(images);
+    setImages(
+      reorderedImages.map((image, index) => ({
+        ...image,
+        order: index,
+      }))
+    );
+  };
 
   return (
     <div className="border p-5 shadow-md">
-      <div className=" bg-white p-5">
+      <div className=" bg-white p-5 mb-3">
         <div className="flex justify-between w-full">
           <div className="text-lg font-bold">
             {selectedImages.length > 0
@@ -62,7 +113,11 @@ const Gallery = () => {
             {selectedImages.length > 0 && (
               <button
                 onClick={handleBatchDelete}
-                className="bg-red-500 text-white px-4 py-2 rounded"
+                className={`bg-red-500 text-white px-4 py-2 rounded ${
+                  selectedImages.length > 0
+                    ? "visible opacity-100"
+                    : "invisible opacity-0"
+                }`}
               >
                 Delete
               </button>
@@ -70,13 +125,21 @@ const Gallery = () => {
           </div>
         </div>
       </div>
+
       <DragDropContext onDragEnd={onDragEnd}>
+        {/* <GridContextProvider
+        onChange={(sourceId, sourceIndex, targetIndex) => {
+          const nextState = swap(images, sourceIndex, targetIndex);
+          setImages(nextState);
+        }}
+      > */}
         <ImageList
           images={images}
           onImageSelect={handleImageSelect}
           selectedImages={selectedImages}
         />
       </DragDropContext>
+      {/* </GridContextProvider> */}
     </div>
   );
 };
