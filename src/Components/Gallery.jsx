@@ -79,7 +79,7 @@ const Gallery = () => {
               <div className="flex gap-2 items-center">
                 <img
                   className="w-5 h-5"
-                  src="./../../public/assets/images/checkbox.png"
+                  src="./assets/images/checkbox.png"
                   alt=""
                 />
                 {`Selected Items: ${selectedImages.length}`}
