@@ -14,19 +14,16 @@ const Gallery = () => {
   const [selectedImages, setSelectedImages] = useState([]);
 
   const handleImageSelect = (id) => {
-    const isSelected = selectedImages.includes(id);
-    if (isSelected) {
-      const updatedSelection = selectedImages.filter(
-        (selectedId) => selectedId !== id
-      );
-      setSelectedImages(updatedSelection);
-    } else {
-      setSelectedImages([...selectedImages, id]);
-    }
+    setSelectedImages((prevSelectedImages) => {
+      const isSelected = prevSelectedImages.includes(id);
+      if (isSelected) {
+        return prevSelectedImages.filter((imageId) => imageId !== id);
+      } else {
+        return [...prevSelectedImages, id];
+      }
+    });
   };
-
   console.log(selectedImages);
-
   const handleBatchDelete = () => {
     const updatedImages = [...images];
     const selectedImageIds = selectedImages.slice();

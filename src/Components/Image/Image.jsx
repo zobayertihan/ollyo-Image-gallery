@@ -5,10 +5,9 @@ import "./Image.css";
 
 const Image = ({ id, src, onImageSelect, isSelected }) => {
   const [hovered, setHovered] = useState(false);
-  const handleCheckboxChange = () => {
-    onImageSelect(id);
-    console.log(id);
-  };
+  // const handleCheckboxChange = () => {
+  //   onImageSelect(id);
+  // };
   return (
     <div
       className={`relative image border rounded cursor-pointer ${
@@ -22,11 +21,11 @@ const Image = ({ id, src, onImageSelect, isSelected }) => {
       {hovered || isSelected ? (
         <div className="absolute top-2 left-2">
           <input
+            id={id}
+            name={id}
             type="checkbox"
             className="form-checkbox text-blue-500 cursor-pointer"
-            onChange={() => {
-              console.log("clicked");
-            }}
+            onChange={() => onImageSelect(id)}
             checked={isSelected}
           />
         </div>
