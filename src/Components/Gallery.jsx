@@ -14,26 +14,23 @@ import {
 } from "@dnd-kit/sortable";
 import ImageList from "./ImageList/ImageList";
 import imagesData from "../images.json";
-import { useImageContext } from "../Context/ImageContext";
 
 const Gallery = () => {
   const [images, setImages] = useState(imagesData);
-  // const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
-  const { selectedImages, setSelectedImages } = useImageContext();
-
-  // const handleImageSelect = (id, e) => {
-  //   console.log(e);
-  //   setSelectedImages((prevSelectedImages) => {
-  //     const isSelected = prevSelectedImages.includes(id);
-  //     if (isSelected) {
-  //       return prevSelectedImages.filter((imageId) => imageId !== id);
-  //     } else {
-  //       return [...prevSelectedImages, id];
-  //     }
-  //   });
-  // };
-  // console.log(selectedImages);
+  const handleImageSelect = (id, e) => {
+    console.log(e);
+    setSelectedImages((prevSelectedImages) => {
+      const isSelected = prevSelectedImages.includes(id);
+      if (isSelected) {
+        return prevSelectedImages.filter((imageId) => imageId !== id);
+      } else {
+        return [...prevSelectedImages, id];
+      }
+    });
+  };
+  console.log(selectedImages);
 
   const handleBatchDelete = () => {
     const updatedImages = [...images];
@@ -78,9 +75,18 @@ const Gallery = () => {
       <div className=" bg-white p-5 mb-3">
         <div className="flex justify-between w-full">
           <div className="text-lg font-bold">
-            {selectedImages.length > 0
-              ? `Selected Items: ${selectedImages.length}`
-              : "Gallery"}
+            {selectedImages.length > 0 ? (
+              <div className="flex gap-2 items-center">
+                <img
+                  className="w-5 h-5"
+                  src="./../../public/assets/images/checkbox.png"
+                  alt=""
+                />
+                {`Selected Items: ${selectedImages.length}`}
+              </div>
+            ) : (
+              "Gallery"
+            )}
           </div>
           <div className="">
             {selectedImages.length > 0 && (
@@ -105,7 +111,11 @@ const Gallery = () => {
         collisionDetection={closestCenter}
       >
         <SortableContext items={images} strategy={rectSortingStrategy}>
-          <ImageList images={images} />
+          <ImageList
+            images={images}
+            onImageSelect={handleImageSelect}
+            selectedImages={selectedImages}
+          />
         </SortableContext>
       </DndContext>
     </div>

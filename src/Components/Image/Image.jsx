@@ -1,19 +1,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Image.css";
-import { useImageContext } from "../../Context/ImageContext";
 
-const Image = ({ id, src, isSelected }) => {
-  const { handleImageSelect } = useImageContext();
+const Image = ({ id, src, onImageSelect, isSelected }) => {
   const [hovered, setHovered] = useState(false);
-  // const [isSelected, setIsSelected] = useState(false);
-  // useEffect(() => {
-  //   if (selectedImages.includes(id)) {
-  //     setIsSelected(true);
-  //   }
-  // }, [id, selectedImages]);
-  console.log(isSelected);
+
   return (
     <div
       className={`relative image border rounded cursor-pointer ${
@@ -30,8 +22,8 @@ const Image = ({ id, src, isSelected }) => {
             id={id}
             name={id}
             type="checkbox"
-            className="form-checkbox text-blue-500 cursor-pointer w-8 h-8"
-            onChange={(e) => handleImageSelect(id, e)}
+            className="form-checkbox text-blue-500 cursor-pointer w-5 h-5"
+            onChange={() => onImageSelect(id)}
             checked={isSelected}
             value={id}
           />
