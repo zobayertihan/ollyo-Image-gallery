@@ -4,8 +4,9 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Image from "../Image/Image";
+import { useImageContext } from "../../Context/ImageContext";
 
-const DraggableImage = ({ id, src, onImageSelect, isSelected, index }) => {
+const DraggableImage = ({ id, src, isSelected, index }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
@@ -27,7 +28,7 @@ const DraggableImage = ({ id, src, onImageSelect, isSelected, index }) => {
       <Image
         id={id}
         src={src}
-        onImageSelect={onImageSelect}
+        // onImageSelect={onImageSelect}
         isSelected={isSelected}
         index={index}
       />
@@ -35,7 +36,9 @@ const DraggableImage = ({ id, src, onImageSelect, isSelected, index }) => {
   );
 };
 
-const ImageList = ({ images, onImageSelect, selectedImages }) => {
+const ImageList = ({ images }) => {
+  const { selectedImages } = useImageContext();
+  // console.log(selectedImages);
   return (
     <div className="grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-5">
       {images.map((image, index) => (
@@ -43,8 +46,8 @@ const ImageList = ({ images, onImageSelect, selectedImages }) => {
           key={image.id}
           id={image.id}
           src={image.src}
-          onImageSelect={onImageSelect}
-          isSelected={selectedImages.includes(image.id)}
+          // onImageSelect={onImageSelect}
+          isSelected={selectedImages.some((e) => e.checked)}
           index={index}
         />
       ))}

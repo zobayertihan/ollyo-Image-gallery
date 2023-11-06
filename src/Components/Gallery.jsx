@@ -1,6 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
-import { DndContext } from "@dnd-kit/core";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
@@ -8,22 +14,27 @@ import {
 } from "@dnd-kit/sortable";
 import ImageList from "./ImageList/ImageList";
 import imagesData from "../images.json";
+import { useImageContext } from "../Context/ImageContext";
 
 const Gallery = () => {
   const [images, setImages] = useState(imagesData);
-  const [selectedImages, setSelectedImages] = useState([]);
+  // const [selectedImages, setSelectedImages] = useState([]);
 
-  const handleImageSelect = (id) => {
-    setSelectedImages((prevSelectedImages) => {
-      const isSelected = prevSelectedImages.includes(id);
-      if (isSelected) {
-        return prevSelectedImages.filter((imageId) => imageId !== id);
-      } else {
-        return [...prevSelectedImages, id];
-      }
-    });
-  };
-  console.log(selectedImages);
+  const { selectedImages, setSelectedImages } = useImageContext();
+
+  // const handleImageSelect = (id, e) => {
+  //   console.log(e);
+  //   setSelectedImages((prevSelectedImages) => {
+  //     const isSelected = prevSelectedImages.includes(id);
+  //     if (isSelected) {
+  //       return prevSelectedImages.filter((imageId) => imageId !== id);
+  //     } else {
+  //       return [...prevSelectedImages, id];
+  //     }
+  //   });
+  // };
+  // console.log(selectedImages);
+
   const handleBatchDelete = () => {
     const updatedImages = [...images];
     const selectedImageIds = selectedImages.slice();
@@ -40,6 +51,14 @@ const Gallery = () => {
     }
     setImages(updatedImages);
   };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   const onDragEnd = (event) => {
     const { active, over } = event;
@@ -80,13 +99,13 @@ const Gallery = () => {
         </div>
       </div>
 
-      <DndContext onDragEnd={onDragEnd}>
+      <DndContext
+        onDragEnd={onDragEnd}
+        sensors={sensors}
+        collisionDetection={closestCenter}
+      >
         <SortableContext items={images} strategy={rectSortingStrategy}>
-          <ImageList
-            images={images}
-            onImageSelect={handleImageSelect}
-            selectedImages={selectedImages}
-          />
+          <ImageList images={images} />
         </SortableContext>
       </DndContext>
     </div>
